@@ -4,10 +4,10 @@ name: Java CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -21,6 +21,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '23'
+        distribution: 'temurin'  # Укажите дистрибутив JDK
 
     - name: Build with Maven
       run: mvn clean install
