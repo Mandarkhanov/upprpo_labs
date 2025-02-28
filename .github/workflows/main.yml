@@ -1,14 +1,16 @@
+# .github/workflows/main.yml
 name: Java CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +21,6 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '23'
-        distribution: 'adopt'
 
     - name: Build with Maven
       run: mvn clean install
