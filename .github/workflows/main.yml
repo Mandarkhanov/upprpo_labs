@@ -59,7 +59,7 @@ jobs:
       # (Опционально) Публикация артефактов отчетов для скачивания
       - name: Archive JaCoCo coverage report
         if: always() # Запускать всегда, даже если предыдущие шаги упали, чтобы можно было скачать отчет
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: jacoco-report
           path: target/site/jacoco/
@@ -67,7 +67,7 @@ jobs:
 
       - name: Archive PMD and Checkstyle reports
         if: always() # Запускать всегда, чтобы можно было скачать отчеты
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: static-analysis-reports
           path: |
