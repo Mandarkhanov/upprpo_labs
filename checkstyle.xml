@@ -6,23 +6,30 @@
     <property name="charset" value="UTF-8"/>
     <property name="fileExtensions" value="java, properties, xml"/>
 
-    <!-- Checks for Headers                               -->
-    <!-- See http://checkstyle.sf.net/config_header.html   -->
-    <!-- <module name="Header">                           -->
+    <!-- Checks for Headers -->
+    <!-- <module name="Header"> -->
     <!--   <property name="headerFile" value="${checkstyle.header.file}"/> -->
     <!--   <property name="fileExtensions" value="java"/> -->
-    <!-- </module>                                        -->
+    <!-- </module> -->
+
+    <!-- FileSetChecks - применяются ко всему набору файлов -->
+    <module name="NewlineAtEndOfFile"/>
+    <module name="FileTabCharacter">
+        <property name="eachLine" value="true"/>
+    </module>
+    <module name="LineLength"> <!-- ПЕРЕМЕСТИЛИ СЮДА -->
+        <property name="max" value="120"/>
+        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+    </module>
+
 
     <module name="TreeWalker">
 
         <!-- Javadoc Comments -->
         <module name="JavadocType">
-            <property name="scope" value="public"/> <!-- Попробуем оставить для JavadocType, он обычно это поддерживает -->
+            <property name="scope" value="public"/>
         </module>
-        <module name="JavadocMethod">
-            <!-- Убрали все специфичные property, оставим голый модуль для проверки -->
-            <!-- Если и это не сработает, можно и его закомментировать временно -->
-        </module>
+        <module name="JavadocMethod"/>
         <module name="JavadocVariable">
             <property name="scope" value="public"/>
         </module>
@@ -47,11 +54,7 @@
             <property name="processJavadoc" value="false"/>
         </module>
 
-        <!-- Size Violations -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
-            <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
-        </module>
+        <!-- Size Violations (которые относятся к AST) -->
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
@@ -93,23 +96,21 @@
         <module name="SimplifyBooleanReturn"/>
 
         <!-- Design -->
-        <!-- <module name="DesignForExtension"/> --> <!-- Может быть слишком строгим -->
+        <!-- <module name="DesignForExtension"/> -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <!-- <module name="VisibilityModifier"/> --> <!-- Может быть слишком строгим, требует Javadoc -->
+        <!-- <module name="VisibilityModifier"/> -->
 
         <!-- Miscellaneous -->
         <module name="ArrayTypeStyle"/>
-        <!-- <module name="FinalParameters"/> --> <!-- Может быть слишком строгим -->
+        <!-- <module name="FinalParameters"/> -->
         <module name="TodoComment"/>
         <module name="UpperEll"/>
 
-    </module>
+    </module> <!-- Конец TreeWalker -->
 
-    <!-- Проверка на табы -->
-    <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
-    </module>
+    <!-- JavadocPackage проверяет package-info.java, поэтому он вне TreeWalker -->
+    <module name="JavadocPackage"/>
 
 </module>
