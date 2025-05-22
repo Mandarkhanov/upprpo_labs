@@ -11,22 +11,16 @@
     <!-- Модуль TreeWalker для проверок, работающих с AST -->
     <module name="TreeWalker">
         <!-- Javadoc Checks -->
-        <!-- Checks that each Java package has a Javadoc comment. -->
-        <!-- See https://checkstyle.sourceforge.io/config_javadoc.html#JavadocPackage -->
-        <!-- JavadocPackage не должен быть в TreeWalker, он проверяет файлы package-info.java -->
-        <!-- Оставляем его вне TreeWalker, если он нужен на уровне файлов -->
-
         <!-- Checks that all Javadoc comments comply with the Javadoc style. -->
         <!-- See https://checkstyle.sourceforge.io/config_javadoc.html#JavadocType -->
         <module name="JavadocType">
             <property name="scope" value="package"/>
-            <!-- <property name="allowMissingSrcRoots" value="true"/> Убрано, т.к. вызывало ошибку -->
         </module>
 
         <!-- Checks that all Javadoc tags comply with the Javadoc style. -->
         <!-- See https://checkstyle.sourceforge.io/config_javadoc.html#JavadocMethod -->
         <module name="JavadocMethod">
-            <property name="scope" value="public"/>
+            <!-- <property name="scope" value="public"/> УДАЛЕНО -->
             <property name="allowMissingParamTag" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowMissingThrowsTag" value="true"/>
@@ -34,25 +28,19 @@
         </module>
 
         <!-- Whitespace Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#NoWhitespaceAfter -->
         <module name="NoWhitespaceAfter">
             <property name="tokens" value="DOT, METHOD_REF"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#NoWhitespaceBefore -->
         <module name="NoWhitespaceBefore">
             <property name="tokens" value="COMMA, SEMI, POST_INC, POST_DEC, DOT, METHOD_REF"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_ws.html#WhitespaceAfter -->
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI, TYPE_EXTENSION_AND, RBRACK"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#ParenPad -->
         <module name="ParenPad"/>
 
         <!-- Block Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html#LeftCurly -->
         <module name="LeftCurly"/>
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html#RightCurly -->
         <module name="RightCurly">
             <property name="id" value="RightCurlyStandalone"/>
             <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, LITERAL_IF, LITERAL_ELSE, LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, ARRAY_INIT"/>
@@ -62,16 +50,12 @@
             <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, LITERAL_IF, LITERAL_ELSE, LITERAL_TRY, LITERAL_CATCH, LITERAL_FINALLY, LITERAL_SWITCH, LITERAL_SYNCHRONIZED, ARRAY_INIT"/>
             <property name="option" value="alone"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html#NeedBraces -->
         <module name="NeedBraces"/>
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html#EmptyBlock -->
         <module name="EmptyBlock"/>
-        <!-- See https://checkstyle.sourceforge.io/config_blocks.html#EmptyBlock -->
         <module name="EmptyCatchBlock"/>
 
 
         <!-- Import Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_imports.html#ImportOrder -->
         <module name="ImportOrder">
             <property name="groups" value="java,javax,org,com"/>
             <property name="ordered" value="true"/>
@@ -79,61 +63,46 @@
             <property name="option" value="top"/>
             <property name="sortStaticImportsAlphabetically" value="true"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_imports.html#RedundantImport -->
         <module name="RedundantImport"/>
-        <!-- See https://checkstyle.sourceforge.io/config_imports.html#UnusedImports -->
         <module name="UnusedImports"/>
 
         <!-- Coding Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#MultipleVariableDeclarations -->
         <module name="MultipleVariableDeclarations"/>
-        <!-- See https://checkstyle.sourceforge.io/config_coding.html#MagicNumber -->
         <module name="MagicNumber"/>
-        <!-- See https://checkstyle.sourceforge.io/config_coding.html#StringLiteralEquality -->
         <module name="StringLiteralEquality"/>
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#NoFinalizer -->
         <module name="NoFinalizer"/>
 
         <!-- Naming Conventions -->
-        <!-- See https://checkstyle.sourceforge.io/config_naming.html -->
         <module name="LocalVariableName"/>
         <module name="LocalFinalVariableName"/>
         <module name="MemberName"/>
         <module name="MethodName"/>
-        <module name="PackageName"/> <!-- Это должно быть вне TreeWalker, если проверяет имена пакетов из файлов -->
+        <module name="PackageName"/>
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
         <module name="TypeName"/>
 
         <!-- Annotation Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_annotation.html#MissingOverride -->
         <module name="MissingOverride"/>
 
         <!-- Other Whitespace and Formatting Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_ws.html#MethodParamPad -->
         <module name="MethodParamPad"/>
-        <!-- See https://checkstyle.sourceforge.io/config_ws.html#NoWhitespaceBefore -->
         <module name="NoWhitespaceBefore">
             <property name="tokens" value="ARRAY_INIT, DOT, GENERIC_START, TYPE_EXTENSION_AND"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_ws.html#WhitespaceAfter -->
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#EmptyLineSeparator -->
         <module name="EmptyLineSeparator">
             <property name="tokens" value="PACKAGE_DEF, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
             <property name="allowMultipleEmptyLines" value="false"/>
         </module>
-        <!-- See https://checkstyle.sourceforge.io/config_misc.html#ArrayTypeStyle -->
         <module name="ArrayTypeStyle"/>
-        <!-- See https://checkstyle.sourceforge.io/config_whitespace.html#WhitespaceAround -->
         <module name="WhitespaceAround">
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV, DIV_ASSIGN, EQUAL, GE, GT, LAND, LCURLY, LE, LITERAL_ASSERT, LITERAL_CATCH, LITERAL_DO, LITERAL_ELSE, LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN, LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION, RCURLY, SL, SL_ASSIGN, SR, SR_ASSIGN, STAR, STAR_ASSIGN, TYPE_EXTENSION_AND, WILDCARD_TYPE"/>
         </module>
 
         <!-- Size Checks -->
-        <!-- See https://checkstyle.sourceforge.io/config_sizes.html#LineLength -->
         <module name="LineLength">
             <property name="max" value="120"/>
             <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
@@ -141,12 +110,6 @@
 
     </module> <!-- Конец TreeWalker -->
 
-    <!-- JavadocPackage должен быть здесь, вне TreeWalker, если он проверяет файлы package-info.java -->
     <module name="JavadocPackage"/>
-
-    <!-- PackageName также может быть здесь, если он проверяет структуру пакетов, а не AST -->
-    <!-- Если он проверяет имя пакета в объявлении `package ...;` то он должен быть в TreeWalker -->
-    <!-- Для Google Checks он обычно в TreeWalker, поэтому я его там оставил.
-         Если будет ошибка на PackageName, его можно попробовать вынести сюда. -->
 
 </module>
