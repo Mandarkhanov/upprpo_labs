@@ -6,7 +6,11 @@
 
     <groupId>tutorial</groupId>
     <artifactId>LW1</artifactId>
+<<<<<<< HEAD
     <version>1.0-SNAPSHOT</version> <!-- Эту версию будет обновлять semantic-release -->
+=======
+    <version>1.0.0</version>
+>>>>>>> f15c8b69fdc023e7542551181cebb81b5f3a0dec
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
