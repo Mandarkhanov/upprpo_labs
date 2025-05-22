@@ -1,26 +1,141 @@
-name: Java CI
+name: Java CI, Docker Build & Release
 
 on:
   push:
     branches:
-      - master
+      - master # Триггер для релизов
   pull_request:
     branches:
       - master
 
 jobs:
-  build:
+  build_and_test: # Переименовал для ясности
     runs-on: ubuntu-latest
+    outputs: # Для передачи версии проекта в следующий job, если понадобится
+      project_version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # Обновил версию checkout
+        with:
+          fetch-depth: 0 # Необходимо для semantic-release для анализа всей истории коммитов
+
+      - name: Set up JDK 23
+        uses: actions/setup-java@v3 # Обновил версию setup-java
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+          cache: 'maven' # Добавил кэширование Maven зависимостей
+
+      - name: Build with Maven and Run Tests
+        run: mvn clean install # 'install' выполняет и сборку, и тесты
+
+      - name: Get project version from pom.xml
+        id: get_version
+        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+
+  docker_build_and_push:
+    needs: build_and_test # Запускать после успешной сборки и тестов
+    runs-on: ubuntu-latest
+    # Запускать только для master ветки, чтобы не пушить dev-сборки постоянно (если не нужно)
+    # Но для задачи "пуш при каждом релизе", это будет управляться semantic-release job'ом
+    # Пока оставим так, чтобы пушить образ master ветки с тегом latest и sha
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      packages: write # Необходимо для пуша в GHCR
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up JDK 23
-      uses: actions/setup-java@v2
-      with:
-        java-version: '23'
-        distribution: 'temurin'  # Укажите дистрибутив JDK
+      - name: Set up QEMU (for multi-platform builds, optional but good practice)
+        uses: docker/setup-qemu-action@v2
 
-    - name: Build with Maven
-      run: mvn clean install
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          # Для master ветки будем использовать теги: latest, sha
+          # Для релизов (тегов git) semantic-release создаст тег с версией
+          tags: |
+            type=sha,prefix=
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'master') }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  release:
+    name: Semantic Release
+    needs: [build_and_test, docker_build_and_push] # Запускается после сборки, тестов и пуша Docker-образа
+    runs-on: ubuntu-latest
+    # Запускать только для push-событий в master ветку, чтобы делать релизы
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+
+    permissions:
+      contents: write      # для коммита pom.xml/changelog, создания тегов и релизов
+      issues: write      # для комментирования issue/PR (если semantic-release настроен для этого)
+      pull-requests: write # для комментирования PR (если semantic-release настроен для этого)
+      # packages: write    # Не нужно здесь, если Docker-образ с версией не пушится из этого job'а
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Нужно для semantic-release для анализа всей истории коммитов
+          # persist-credentials: false # Обычно не требуется, если GITHUB_TOKEN используется для пуша
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*' # Используем LTS версию Node.js
+
+      - name: Install dependencies (semantic-release & plugins)
+        # Убедись, что у тебя есть package.json и package-lock.json
+        # Если package-lock.json нет, используй 'npm install' для первой установки,
+        # а затем закоммить package-lock.json и используй 'npm ci'
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Set up JDK 23 (for mvn commands in semantic-release)
+        uses: actions/setup-java@v3
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Configure Git User
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+      - name: Run semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Для Docker Hub (если бы ты его использовал):
+          # DOCKER_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          # DOCKER_PASSWORD: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}

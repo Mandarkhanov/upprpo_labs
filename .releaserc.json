@@ -1,0 +1,44 @@
+{
+  "branches": [
+    "master"
+  ],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits",
+      "releaseRules": [
+        {"type": "docs", "scope": "readme", "release": "patch"},
+        {"type": "refactor", "release": "patch"},
+        {"type": "style", "release": "patch"},
+        {"type": "chore", "release": "patch"}
+      ],
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
+      }
+    }],
+    ["@semantic-release/release-notes-generator", {
+      "preset": "conventionalcommits",
+      "parserOpts": {
+        "noteKeywords": ["BREAKING CHANGE", "BREAKING CHANGES"]
+      },
+      "writerOpts": {
+        "commitsSort": ["subject", "scope"]
+      }
+    }],
+    ["@semantic-release/changelog", {
+      "changelogFile": "CHANGELOG.md"
+    }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "mvn versions:set -DnewVersion=${nextRelease.version} -DprocessAllModules -DgenerateBackupPoms=false && mvn clean package -DskipTests && mvn versions:commit -DprocessAllModules",
+      "publishCmd": "echo 'Maven release processing done in prepare step. Version: ${nextRelease.version}'"
+    }],
+    ["@semantic-release/git", {
+      "assets": ["pom.xml", "CHANGELOG.md"],
+      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+    }],
+    ["@semantic-release/github", {
+      "assets": [
+        { "path": "target/LW1-${nextRelease.version}.jar", "label": "LW1 Application JAR ${nextRelease.version}" }
+      ]
+    }]
+  ]
+}
