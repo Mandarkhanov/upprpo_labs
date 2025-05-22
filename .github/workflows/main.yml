@@ -56,7 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Для интеграции SonarCloud с GitHub (например, PR-декорация)
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Секрет для аутентификации на SonarCloud
 
-      # (Опционально) Публикация артефактов отчетов для скачивания
 #      - name: Archive JaCoCo coverage report
 #        if: always() # Запускать всегда, даже если предыдущие шаги упали, чтобы можно было скачать отчет
 #        uses: actions/upload-artifact@97a94e203b0f3ee37a061f83a0171cca3ef5756a
