@@ -29,7 +29,7 @@
     <!-- See https://checkstyle.sourceforge.io/config_javadoc.html#JavadocType -->
     <module name="JavadocType">
         <property name="scope" value="package"/>
-        <property name="allowMissingSrcRoots" value="true"/>
+<!--        <property name="allowMissingSrcRoots" value="true"/>-->
     </module>
 
     <!-- Checks that all Javadoc tags comply with the Javadoc style. -->
