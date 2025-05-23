@@ -23,7 +23,7 @@
         <versions-maven-plugin.version>2.16.2</versions-maven-plugin.version>
         <sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
 
-        <sonar.organization>Mandarkhanov</sonar.organization>
+        <sonar.organization>mandarkhanov</sonar.organization>
         <sonar.projectKey>Mandarkhanov_upprpo_labs</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.sources>src/main/java</sonar.sources>
