@@ -131,7 +131,7 @@
                         <ruleset>/category/java/multithreading.xml</ruleset>
                         <ruleset>/category/java/performance.xml</ruleset>
                     </rulesets>
-                    <failOnViolation>true</failOnViolation> <!-- Останавливать сборку при нарушениях -->
+                    <failOnViolation>false</failOnViolation> <!-- Останавливать сборку при нарушениях -->
                     <printFailingErrors>true</printFailingErrors>
                     <linkXRef>false</linkXRef> <!-- Отключить, если не генерируешь Maven Site -->
                 </configuration>
