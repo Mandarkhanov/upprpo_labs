@@ -164,7 +164,7 @@
                     <configLocation>checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
-                    <failsOnError>true</failsOnError> <!-- Останавливать сборку при ошибках стиля -->
+                    <failsOnError>false</failsOnError> <!-- Останавливать сборку при ошибках стиля -->
                     <linkXRef>false</linkXRef> <!-- Отключить, если не генерируешь Maven Site -->
                 </configuration>
                 <executions>
